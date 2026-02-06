@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hei Kamu 🤍</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: url("bg.jpg") center/cover no-repeat;
+  overflow: hidden;
+  color: white;
+}
+
+#tapArea {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  animation: fade 0.6s ease;
+}
+
+.page.active {
+  display: flex;
+}
+
+p {
+  max-width: 500px;
+  line-height: 1.6;
+  color: #eee;
+}
+
+.tap {
+  margin-top: 25px;
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+input {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  margin-top: 12px;
+}
+
+.buttons {
+  margin-top: 25px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+#yes {
+  background: #ff6fae;
+  color: white;
+}
+
+#no {
+  background: #555;
+  color: white;
+  position: absolute;
+}
+
+@keyframes fade {
+  from {opacity: 0; transform: translateY(15px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" src="music.mp3" loop></audio>
+
+<div id="tapArea">
+
+  <!-- PAGE 0 : INPUT NAMA -->
+  <div class="page active">
+    <h2>Hei kamu 🤍</h2>
+    <p>Sebelum lanjut, aku mau tau nama kamu dulu</p>
+    <input id="namaInput" type="text" placeholder="Nama kamu...">
+    <div class="tap">Tap di luar input untuk lanjut</div>
+  </div>
+
+  <!-- PAGE 1 -->
+  <div class="page">
+    <p>
+      Aku gak tau kapan perasaan ini mulai,  
+      tapi akhir-akhir ini kamu selalu ada di pikiranku.
+    </p>
+    <div class="tap">Tap layar</div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page">
+    <p>
+      Aku nyaman sama caramu,  
+      sama caramu hadir tanpa dibuat-buat.
+    </p>
+    <div class="tap">Tap layar</div>
+  </div>
+
+  <!-- PAGE 3 : NEMBAK -->
+  <div class="page">
+    <p>
+      Jadi sekarang aku mau jujur sepenuhnya…  
+      kamu mau gak jalan bareng aku?
+    </p>
+    <div class="buttons">
+      <button id="yes">Mau 🤍</button>
+      <button id="no">Gak</button>
+    </div>
+  </div>
+
+  <!-- PAGE 4 : FINAL -->
+  <div class="page">
+    <h2>Makasih ya, <span id="namaAkhir"></span> 🤍</h2>
+    <p>
+      Aku janji, perasaan ini bukan main-main.  
+      Aku mau jaga kamu, pelan-pelan tapi serius.
+    </p>
+  </div>
+
+</div>
+
+<script>
+const pages = document.querySelectorAll(".page");
+const tapArea = document.getElementById("tapArea");
+const music = document.getElementById("music");
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+
+let current = 0;
+let musicPlayed = false;
+let nama = "";
+
+/* TAP GLOBAL — TAPI INPUT & BUTTON DIKECUALIKAN */
+tapArea.addEventListener("click", (e) => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") {
+    return;
+  }
+
+  if (!musicPlayed) {
+    music.play();
+    musicPlayed = true;
+  }
+
+  if (current === 0) {
+    const input = document.getElementById("namaInput");
+    nama = input.value.trim() || "Kamu";
+  }
+
+  if (current < pages.length - 2) {
+    pages[current].classList.remove("active");
+    current++;
+    pages[current].classList.add("active");
+  }
+});
+
+/* YES BUTTON */
+yesBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  pages[current].classList.remove("active");
+  current++;
+  pages[current].classList.add("active");
+  document.getElementById("namaAkhir").innerText = nama;
+});
+
+/* NO BUTTON KABUR */
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("click", moveNo);
+
+function moveNo() {
+  const x = Math.random() * (window.innerWidth - 120);
+  const y = Math.random() * (window.innerHeight - 60);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+</script>
+
+</body>
+</html>
